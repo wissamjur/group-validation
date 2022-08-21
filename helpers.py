@@ -1,6 +1,19 @@
 from operator import itemgetter
 
 
+def get_all_genres_list(df):
+    genres = df.genres.to_list()
+    user_genre_list = []
+
+    for genre in genres:
+        if(genre == '(no genres listed)'):
+            continue
+        genre_list = genre.split('|')
+        user_genre_list.extend(genre_list)
+
+    return list(set(user_genre_list))
+
+
 # Function that returns the unique genre list based on the history of a user/s
 def get_user_genre_list(user_id, test_df):
     user_data = test_df[test_df['userId'] == user_id]
@@ -18,12 +31,18 @@ def get_user_genre_list(user_id, test_df):
 
 # Maximum likelihood equation
 def get_user_max_likelihood(user_id, genre, test_df):
+    den_list = []
+    user_genres = get_user_genre_list(user_id, test_df)
     user_data = test_df[test_df['userId'] == user_id]
     genre_data = user_data.loc[user_data['genres'].str.contains(
         genre, case=False)].sort_values(by='rating', ascending=False)
 
+    for genre in user_genres:
+        genre_data_den = user_data.loc[user_data['genres'].str.contains(genre, case=False)]
+        den_list.extend(genre_data_den.rating.values)
+
     num = sum(genre_data.rating.to_list())
-    den = sum(user_data.rating.to_list())
+    den = sum(den_list)
 
     return num / den
 
@@ -32,7 +51,7 @@ def get_ideal_rankings(user_id, test_df, k=10):
     test_df_copy = test_df.copy()
     top_k_ideal = []
 
-    for k in range(1, 11):
+    for k in range(1, k+1):
         weights = []
         user = test_df_copy[test_df_copy['userId'] == user_id]
         user_genre_list = get_user_genre_list(user_id, test_df_copy)
@@ -42,7 +61,7 @@ def get_ideal_rankings(user_id, test_df, k=10):
                 genre, case=False)].sort_values(by=['rating', 'count_genres'], ascending=False)
 
             # calculate gamm from the original test_df
-            gamma = get_user_max_likelihood(1, genre, test_df)
+            gamma = get_user_max_likelihood(user_id, genre, test_df)
             top_rating = genre_data.iloc[0].rating
 
             next_k = abs(top_rating - gamma)
