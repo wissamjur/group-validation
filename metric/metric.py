@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import pandas as pd
 from helpers.dataset_helpers import get_genres_as_columns, get_all_genres_list
 
 
@@ -83,6 +84,7 @@ def get_user_dcg(user_id, rankings_hits, ratings_df, likelihood_dict, k=5):
 
 def get_dcg(rankings_hits, ratings_df, likelihood_dict, k=5):
     dcg = []
+    dcg_df_list = []
 
     # loop over all users
     users = list(set(ratings_df.userId.to_list()))
@@ -90,7 +92,9 @@ def get_dcg(rankings_hits, ratings_df, likelihood_dict, k=5):
     for user in users:
         user_dcg = get_user_dcg(user, rankings_hits, ratings_df, likelihood_dict, k)
         dcg.append(sum(user_dcg.DCG.to_list()))
+        dcg_df_list.append(user_dcg)
 
     dcg = sum(dcg)
+    dcg_df = pd.concat(dcg_df_list)
 
-    return dcg
+    return dcg, dcg_df
