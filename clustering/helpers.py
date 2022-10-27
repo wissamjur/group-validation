@@ -19,8 +19,8 @@ def transform_df(dataset):
     for i in b:
         dataset.loc[dataset['genres'].str.contains(i), i] = 1
 
-    # Now there is no use of genre
-    # Since we have movie id so there is no need for movie names as well
+    # now there is no use of genre
+    # since we have movie id so there is no need for movie names as well
     dataset = dataset.drop(['genres', 'title'], axis=1)
 
     return dataset

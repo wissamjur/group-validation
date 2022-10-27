@@ -64,7 +64,7 @@ def get_ideal_rankings(user_id, likelihood_dict, test_df, k=10):
             genre_data = user.loc[user['genres'].str.contains(
                 genre, case=False)].sort_values(by=['rating', 'count_genres'], ascending=False)
 
-            # calculate gamm from the original test_df (pre-calculated, load from dict)
+            # calculate gamma from the original test_df (pre-calculated, load from dict)
             gamma = likelihood_dict[genre][user_id - 1][1]
 
             top_rating = genre_data.iloc[0].rating
