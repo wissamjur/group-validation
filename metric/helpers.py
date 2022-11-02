@@ -3,7 +3,7 @@ from operator import itemgetter
 from collections import defaultdict
 
 
-def build_all_likelihood_dict(users, genres, ratings_df):
+def build_all_likelihood_dict(users, genres, ratings_df, dataset_name):
     dataset_likelihoods = defaultdict(list)
 
     # build all user likelihoods from all available genres
@@ -13,7 +13,7 @@ def build_all_likelihood_dict(users, genres, ratings_df):
             dataset_likelihoods[genre].append((user, max_liklihood))
 
     # save the dict
-    with open("./output/data.pkl", "wb") as pkl_handle:
+    with open("./output/" + dataset_name + "/likelihood.pkl", "wb") as pkl_handle:
         pickle.dump(dataset_likelihoods, pkl_handle)
 
 
