@@ -24,7 +24,7 @@ def get_user_genre_list(user_id, test_df):
     user_genre_list = []
 
     for genre in user_genres:
-        if(genre == '(no genres listed)'):
+        if genre == '(no genres listed)':
             continue
         genre_list = genre.split('|')
         user_genre_list.extend(genre_list)
