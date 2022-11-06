@@ -4,16 +4,16 @@ from collections import defaultdict
 
 
 def build_all_likelihood_dict(users, genres, ratings_df, dataset_name):
-    dataset_likelihoods = defaultdict(list)
+    dataset_likelihoods = defaultdict(dict)
 
     # build all user likelihoods from all available genres
     for genre in genres:
         for user in users:
             max_liklihood = get_user_max_likelihood(user, genre, genres, ratings_df)
-            dataset_likelihoods[genre].append((user, max_liklihood))
+            dataset_likelihoods[genre][user] = max_liklihood
 
     # save the dict
-    with open("./output/" + dataset_name + "/likelihood.pkl", "wb") as pkl_handle:
+    with open("output/" + dataset_name + "/likelihood.pkl", "wb") as pkl_handle:
         pickle.dump(dataset_likelihoods, pkl_handle)
 
 
@@ -65,7 +65,7 @@ def get_ideal_rankings(user_id, likelihood_dict, test_df, k=10):
                 genre, case=False)].sort_values(by=['rating', 'count_genres'], ascending=False)
 
             # calculate gamma from the original test_df (pre-calculated, load from dict)
-            gamma = likelihood_dict[genre][user_id - 1][1]
+            gamma = likelihood_dict[genre][user_id]
 
             top_rating = genre_data.iloc[0].rating
 

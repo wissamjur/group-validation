@@ -40,7 +40,7 @@ def DCG(x, user_id, user_rated_items, user_rankings_hits, likelihood_dict, genre
 
     for genre in genres:
         # get gamma value from likelihood_dict
-        gamma = likelihood_dict[genre][user_id - 1][1]
+        gamma = likelihood_dict[genre][user_id]
 
         genre_ranked_ratings = user_rankings_hits[genre].to_list()
         inner_function = get_inner_function(x['rank'], genre_ranked_ratings, alpha, beta)
@@ -82,12 +82,14 @@ def get_user_dcg(user_id, rankings_hits, ratings_df, likelihood_dict, k=5):
     return user_rankings_hits
 
 
-def get_dcg(rankings_hits, ratings_df, likelihood_dict, k=5):
+def get_dcg(rankings_hits, ratings_df, likelihood_dict, discarded_users, k=5):
     dcg = []
     dcg_df_list = []
 
-    # loop over all users
+    # loop over all users and remove discarded ones (because they have num ratings < k in test_df)
     users = list(set(ratings_df.userId.to_list()))
+    for du in discarded_users:
+        users.remove(du)
 
     for user in users:
         user_dcg = get_user_dcg(user, rankings_hits, ratings_df, likelihood_dict, k)

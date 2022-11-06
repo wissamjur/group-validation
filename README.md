@@ -3,6 +3,6 @@ Code for research paper: Group Validation in Recommender Systems: Framework for 
 
 # Environment setup
 Code environment can be replicated using Anaconda/Docker. All requirements are in the ./requirements.txt file
-`$ conda create --name <env> --file requirements.md`
+`$ conda create --name <env> --file requirements.txt`
 
 # Recommender evaluation process
