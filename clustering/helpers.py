@@ -15,12 +15,12 @@ def transform_df(dataset):
 
     dataset.head(2)
 
-    # we assign 1 to all the columns which are present in the Genres
+    # we assign "1" to all the columns which are present in the Genres
     for i in b:
         dataset.loc[dataset['genres'].str.contains(i), i] = 1
 
     # now there is no use of genre
-    # since we have movie id so there is no need for movie names as well
+    # since we have movieId, there is no need for the movie names
     dataset = dataset.drop(['genres', 'title'], axis=1)
 
     return dataset
