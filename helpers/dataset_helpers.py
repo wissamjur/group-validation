@@ -53,15 +53,13 @@ def create_new_genre_records(user_df, modified_ratings, genres, movies, rating=0
     return records_to_add
 
 
-def flip_pofile_ratings(ratings_detailed, movies, target_cluster, N):
+def flip_pofile_ratings(ratings_detailed, movies, target_cluster, N, users_thresh):
     # make a copy of the original ratings df
     modified_ratings = ratings_detailed.copy()
     records_to_add = []
 
     # threshold to consider for "+ve" feedback (rating >= 3 is considered +ve)
     like_threh = 3
-    # total number of users to consider for data addition (per cluster)
-    users_thresh = 15
 
     # users' ratings to modify (only take top k users from every target cluster)
     cluster_df = ratings_detailed[ratings_detailed['cluster'] == target_cluster]
@@ -89,13 +87,10 @@ def flip_pofile_ratings(ratings_detailed, movies, target_cluster, N):
     return final_df[['userId', 'movieId', 'rating', 'timestamp']]
 
 
-def add_random_ratings(ratings, clusters, target_cluster, N):
+def add_random_ratings(ratings, clusters, target_cluster, N, users_thresh):
     # make a copy of the original ratings df
     modified_ratings = ratings.copy()
     records_to_add = []
-
-    # total number of users to consider for data addition (per cluster)
-    users_thresh = 15
 
     total_movies = len(list(set(ratings.movieId.to_list())))
     max_rating = max(list(set(ratings.rating.to_list())))
